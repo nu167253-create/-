@@ -1,0 +1,11 @@
+{
+  "name": "ระบบบริการคำร้องขอดูภาพกล้องวงจรปิด CCTV เทศบาลเมืองชัยภูมิ",
+  "description": "ระบบยื่นคำร้องขอดูหรือขอสำเนาข้อมูลภาพจากกล้องวงจรปิด CCTV และติดตามสถานะ เทศบาลเมืองชัยภูมิ",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "entities": {
+    "request": {
+      "title": "CCTV Request Item",
+      "description": "Represents an online CCTV view or copy request submitted by a citizen or officer.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 256 },
+        "priority": { "type": "string", "maxLength": 32 },
+        "status": { "type": "string", "maxLength": 32 },
+        "reason": { "type": "string", "maxLength": 2000 },
+        "internalNotes": { "type": "string", "maxLength": 5000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "category", "title", "priority", "status", "reason", "createdAt", "updatedAt"]
+    },
+    "cctv_camera": {
+      "title": "CCTV Camera Asset",
+      "description": "Represents a CCTV camera location and maintenance state.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 256 },
+        "building": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "maxLength": 32 }
+      },
+      "required": ["id", "name", "building", "status"]
+    },
+    "announcement": {
+      "title": "System Announcement Banner",
+      "description": "System wide broadcast announcement message.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "message": { "type": "string", "maxLength": 1000 },
+        "enabled": { "type": "boolean" }
+      },
+      "required": ["id", "title", "message", "enabled"]
+    },
+    "user_profile": {
+      "title": "Applicant User Profile",
+      "description": "Represents personal contact and address details of an applicant.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "fullName": { "type": "string", "maxLength": 256 },
+        "citizenId": { "type": "string", "maxLength": 32 },
+        "email": { "type": "string", "maxLength": 256 },
+        "phone": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "fullName", "citizenId", "email", "phone"]
+    },
+    "archived_request": {
+      "title": "Archived Request Record",
+      "description": "Completed CCTV request moved to long-term cold storage archive after 90 days.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 256 },
+        "status": { "type": "string", "maxLength": 32 },
+        "reason": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "archivedAt": { "type": "string", "format": "date-time" },
+        "archiveReason": { "type": "string", "maxLength": 256 }
+      },
+      "required": ["id", "category", "title", "status", "archivedAt"]
+    },
+    "cctv_equipment": {
+      "title": "CCTV Equipment & Peripheral Asset",
+      "description": "Represents CCTV recording units (NVR), central smart TVs, switches, and peripheral hardware.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 256 },
+        "equipmentType": { "type": "string", "maxLength": 64 },
+        "communityOrOffice": { "type": "string", "maxLength": 256 },
+        "locationName": { "type": "string", "maxLength": 256 },
+        "systemAssetCode": { "type": "string", "maxLength": 128 },
+        "assetCode": { "type": "string", "maxLength": 128 },
+        "model": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "maxLength": 32 },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "name", "equipmentType", "communityOrOffice", "assetCode", "status"]
+    },
+    "user": {
+      "title": "User Account & Authentication Record",
+      "description": "User account authentication and profile info persisted via Firebase Auth and Google Sign-in.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 256 },
+        "photoURL": { "type": "string", "maxLength": 1024 },
+        "phoneNumber": { "type": "string", "maxLength": 64 },
+        "providerId": { "type": "string", "maxLength": 64 },
+        "role": { "type": "string", "maxLength": 32 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "lastLoginAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/user" },
+      "description": "Authenticated user accounts and settings stored with persistent tracking."
+    },
+    "/requests/{requestId}": {
+      "schema": { "$ref": "#/entities/request" },
+      "description": "Collection of CCTV requests submitted to Chaiyaphum municipality."
+    },
+    "/archives/{archiveId}": {
+      "schema": { "$ref": "#/entities/archived_request" },
+      "description": "Archived completed requests older than 90 days."
+    },
+    "/cctv_cameras/{cameraId}": {
+      "schema": { "$ref": "#/entities/cctv_camera" },
+      "description": "CCTV camera locations, status, and maintenance logs."
+    },
+    "/cctv_equipment/{equipmentId}": {
+      "schema": { "$ref": "#/entities/cctv_equipment" },
+      "description": "Registry of municipal and 16-community CCTV NVRs, displays, and peripheral hardware."
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/announcement" },
+      "description": "System-wide announcement banners."
+    },
+    "/user_profiles/{profileId}": {
+      "schema": { "$ref": "#/entities/user_profile" },
+      "description": "Applicant user profiles and contact info."
+    }
+  }
+}
